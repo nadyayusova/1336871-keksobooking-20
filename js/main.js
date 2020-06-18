@@ -24,8 +24,18 @@ var PHOTOS_ADDRESSES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
 
 var map = document.querySelector('.map');
 var pinsHere = map.querySelector('.map__pins');
+var cardsBeforeIt = map.querySelector('.map__filters-container');
 var pinTemplate = document.querySelector('#pin');
 var pinContent = pinTemplate.content.querySelector('.map__pin');
+var cardTemplate = document.querySelector('#card');
+var cardContent = cardTemplate.content.querySelector('.map__card');
+var typesDictionary = {
+  'palace': 'Дворец',
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
+};
+var advertisements = [];
 
 var getMapBounds = function () {
   return map.offsetWidth;
@@ -95,7 +105,7 @@ var renderPin = function (adv) {
 
 var createPins = function () {
   var fragment = document.createDocumentFragment();
-  var advertisements = createAdvertisements();
+  advertisements = createAdvertisements();
 
   for (var i = 0; i < advertisements.length; i++) {
     fragment.appendChild(renderPin(advertisements[i]));
@@ -104,9 +114,109 @@ var createPins = function () {
   return fragment;
 };
 
+var hideBlock = function (blockToHide) {
+  blockToHide.classList.add('hidden');
+};
+
+var renderFeatures = function (featuresBlock, featuresData) {
+  var correction = 0;
+  for (var i = 0; i < FEATURES_TYPES.length; i++) {
+    var ind = featuresData.indexOf(FEATURES_TYPES[i]);
+    if (ind === -1) {
+      featuresBlock.removeChild(featuresBlock.children[i - correction]);
+      correction++;
+    }
+  }
+};
+
+var renderPhotos = function (photosBlock, photosData) {
+  photosBlock.children[0].src = photosData[0];
+  if (photosData.length > 1) {
+    for (var i = 1; i < photosData.length; i++) {
+      photosBlock.appendChild(photosBlock.querySelector('.popup__photo').cloneNode(true));
+      photosBlock.children[i].src = photosData[i];
+    }
+  }
+};
+
+var renderCard = function (adv) {
+  var card = cardContent.cloneNode(true);
+
+  if (!adv.author.avatar) {
+    hideBlock(card.querySelector('.popup__avatar'));
+  } else {
+    card.querySelector('.popup__avatar').src = adv.author.avatar;
+  }
+
+  if (!adv.offer.title) {
+    hideBlock(card.querySelector('.popup__title'));
+  } else {
+    card.querySelector('.popup__title').textContent = adv.offer.title;
+  }
+
+  if (!adv.offer.address) {
+    hideBlock(card.querySelector('.popup__text--address'));
+  } else {
+    card.querySelector('.popup__text--address').textContent = adv.offer.address;
+  }
+
+  if (!adv.offer.price) {
+    hideBlock(card.querySelector('.popup__text--price'));
+  } else {
+    card.querySelector('.popup__text--price').innerHTML = adv.offer.price + '&#x20bd;<span>/ночь</span>';
+  }
+
+  if (!adv.offer.type) {
+    hideBlock(card.querySelector('.popup__type'));
+  } else {
+    card.querySelector('.popup__type').textContent = typesDictionary[adv.offer.type];
+  }
+
+  if ((!adv.offer.rooms) || (!adv.offer.guests)) {
+    hideBlock(card.querySelector('.popup__text--capacity'));
+  } else {
+    card.querySelector('.popup__text--capacity').textContent = adv.offer.rooms + ' комнаты для ' + adv.offer.guests + ' гостей';
+  }
+
+  if ((!adv.offer.checkin) || (!adv.offer.checkout)) {
+    hideBlock(card.querySelector('.popup__text--time'));
+  } else {
+    card.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
+  }
+
+  if (!adv.offer.features) {
+    hideBlock(card.querySelector('.popup__features'));
+  } else {
+    renderFeatures(card.querySelector('.popup__features'), adv.offer.features);
+  }
+
+  if (!adv.offer.type) {
+    hideBlock(card.querySelector('.popup__description'));
+  } else {
+    card.querySelector('.popup__description').textContent = adv.offer.description;
+  }
+
+  if (adv.offer.photos.length === 0) {
+    hideBlock(card.querySelector('.popup__photos'));
+  } else {
+    renderPhotos(card.querySelector('.popup__photos'), adv.offer.photos);
+  }
+
+  return card;
+};
+
+var createCards = function () {
+  var fragment = document.createDocumentFragment();
+
+  fragment.appendChild(renderCard(advertisements[0]));
+
+  return fragment;
+};
+
 var init = function () {
   map.classList.remove('map--faded');
   pinsHere.appendChild(createPins());
+  map.insertBefore(createCards(), cardsBeforeIt);
 };
 
 
