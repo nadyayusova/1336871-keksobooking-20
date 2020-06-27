@@ -24,8 +24,18 @@ var PHOTOS_ADDRESSES = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg',
 
 var map = document.querySelector('.map');
 var pinsHere = map.querySelector('.map__pins');
+var cardsBeforeIt = map.querySelector('.map__filters-container');
 var pinTemplate = document.querySelector('#pin');
 var pinContent = pinTemplate.content.querySelector('.map__pin');
+var cardTemplate = document.querySelector('#card');
+var cardContent = cardTemplate.content.querySelector('.map__card');
+var typesDictionary = {
+  'palace': 'Дворец',
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
+};
+var advertisements = [];
 
 var getMapBounds = function () {
   return map.offsetWidth;
@@ -95,7 +105,7 @@ var renderPin = function (adv) {
 
 var createPins = function () {
   var fragment = document.createDocumentFragment();
-  var advertisements = createAdvertisements();
+  advertisements = createAdvertisements();
 
   for (var i = 0; i < advertisements.length; i++) {
     fragment.appendChild(renderPin(advertisements[i]));
@@ -104,9 +114,61 @@ var createPins = function () {
   return fragment;
 };
 
+var removeEmptyBlock = function (blockToRemove) {
+  blockToRemove.parentNode.removeChild(blockToRemove);
+};
+
+var renderFeatures = function (featuresBlock, featuresData) {
+  var correction = 0;
+  for (var i = 0; i < FEATURES_TYPES.length; i++) {
+    var ind = featuresData.indexOf(FEATURES_TYPES[i]);
+    if (ind === -1) {
+      featuresBlock.removeChild(featuresBlock.children[i - correction]);
+      correction++;
+    }
+  }
+};
+
+var renderPhotos = function (photosBlock, photosData) {
+  photosBlock.children[0].src = photosData[0];
+  if (photosData.length > 1) {
+    var photo = photosBlock.querySelector('.popup__photo');
+    for (var i = 1; i < photosData.length; i++) {
+      photosBlock.appendChild(photo.cloneNode(true));
+      photosBlock.children[i].src = photosData[i];
+    }
+  }
+};
+
+var fillContent = function (cardElement, advData, renderCardElement) {
+  if (advData.length === 0) {
+    removeEmptyBlock(cardElement);
+  } else {
+    renderCardElement(cardElement, advData);
+  }
+};
+
+var renderCard = function (adv) {
+  var card = cardContent.cloneNode(true);
+
+  card.querySelector('.popup__avatar').src = adv.author.avatar;
+  card.querySelector('.popup__title').textContent = adv.offer.title;
+  card.querySelector('.popup__text--address').textContent = adv.offer.address;
+  card.querySelector('.popup__text--price').innerHTML = adv.offer.price + '&#x20bd;<span>/ночь</span>';
+  card.querySelector('.popup__type').textContent = typesDictionary[adv.offer.type];
+  card.querySelector('.popup__text--capacity').textContent = adv.offer.rooms + ' комнаты для ' + adv.offer.guests + ' гостей';
+  card.querySelector('.popup__text--time').textContent = 'Заезд после ' + adv.offer.checkin + ', выезд до ' + adv.offer.checkout;
+  card.querySelector('.popup__description').textContent = adv.offer.description;
+  fillContent(card.querySelector('.popup__features'), adv.offer.features, renderFeatures);
+  fillContent(card.querySelector('.popup__photos'), adv.offer.photos, renderPhotos);
+
+  return card;
+};
+
 var init = function () {
   map.classList.remove('map--faded');
   pinsHere.appendChild(createPins());
+  map.insertBefore(renderCard(advertisements[0]), cardsBeforeIt);
 };
 
 
