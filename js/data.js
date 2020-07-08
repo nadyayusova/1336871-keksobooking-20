@@ -80,6 +80,8 @@
 
   window.data = {
     FEATURES_TYPES: FEATURES_TYPES,
+    CoordinateY: CoordinateY,
+    locationMaxX: locationMaxX,
     map: map,
     createAdvertisements: createAdvertisements
   };

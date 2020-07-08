@@ -36,6 +36,10 @@
     }
   });
 
+  window.pin.mainPin.addEventListener('mousedown', function (evt) {
+    window.move.mainPinMousedown(evt);
+  });
+
   window.pin.mainPin.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter' && window.data.map.classList.contains('map--faded')) {
       setAllActive();
