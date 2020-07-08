@@ -9,7 +9,12 @@
     HALF_WIDTH: 20,
     HEIGHT: 44
   };
-  var MinPrices = [0, 1000, 5000, 10000];
+  var minPrices = {
+    'bungalo': 0,
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var mapFilters = document.querySelectorAll('.map__filters select, .map__filters fieldset');
@@ -58,7 +63,7 @@
   };
 
   var setPrice = function () {
-    var minPrice = MinPrices[selectType.selectedIndex];
+    var minPrice = minPrices[selectType.options[selectType.selectedIndex].value];
     inputPrice.min = minPrice;
     inputPrice.placeholder = minPrice;
   };

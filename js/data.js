@@ -2,13 +2,13 @@
 
 (function () {
   var NUMBER_OF_ADV = 8;
+  var ROOMS_MAX = 10;
+  var GUESTS_MAX = 20;
+  var LOCATION_MIN_X = 0;
   var PriceRange = {
     PRICE_MIN: 1000,
     PRICE_MAX: 5000
   };
-  var ROOMS_MAX = 10;
-  var GUESTS_MAX = 20;
-  var LOCATION_MIN_X = 0;
   var CoordinateY = {
     LOCATION_MIN_Y: 130,
     LOCATION_MAX_Y: 630
