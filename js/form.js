@@ -6,8 +6,8 @@
     MAX_CAPACITY: [1, 2, 3, 0]
   };
   var MainPinSize = {
-    HALF_WIDTH: 20,
-    HEIGHT: 44
+    HALF_WIDTH: 32,
+    HEIGHT: 86
   };
   var minPrices = {
     'bungalo': 0,
@@ -44,7 +44,7 @@
     inputAddress.value = (parseInt(window.pin.mainPin.style.left, 10) + MainPinSize.HALF_WIDTH) + ', ' +
     (
       parseInt(window.pin.mainPin.style.top, 10) +
-      ((isInitialAddress) ? (MainPinSize.HEIGHT / 2) : MainPinSize.HEIGHT)
+      ((isInitialAddress) ? (MainPinSize.HALF_WIDTH) : MainPinSize.HEIGHT)
     );
   };
 

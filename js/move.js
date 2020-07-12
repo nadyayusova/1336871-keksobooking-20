@@ -2,51 +2,41 @@
 
 (function () {
   var MainPinSize = {
-    HALF_WIDTH: 20,
-    HALF_HEIGHT: 22
+    HALF_WIDTH: 32,
+    HEIGHT: 86
   };
   var mainPin = window.data.map.querySelector('.map__pin--main');
 
-  var moveWithBounds = function (currentCoordinate, shift, min, max) {
-    if (currentCoordinate - shift > max) {
-      return max + 'px';
-    } else if (currentCoordinate - shift < min) {
-      return min + 'px';
-    } else {
-      return (currentCoordinate - shift) + 'px';
-    }
+  var moveWithBounds = function (currentCoordinate, min, max) {
+    return (Math.min(max, Math.max(min, currentCoordinate))) + 'px';
   };
 
   var mainPinMousedown = function (evt) {
     evt.preventDefault();
 
     var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
+      x: evt.clientX - window.data.map.offsetLeft,
+      y: evt.clientY - window.data.map.offsetTop
     };
-
-    var dragged = false;
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
 
-      dragged = true;
-
       var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+        x: startCoords.x - (moveEvt.clientX - window.data.map.offsetLeft),
+        y: startCoords.y - (moveEvt.clientY - window.data.map.offsetTop)
       };
 
       startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+        x: moveEvt.clientX - window.data.map.offsetLeft,
+        y: moveEvt.clientY - window.data.map.offsetTop
       };
 
-      mainPin.style.top = moveWithBounds(mainPin.offsetTop, shift.y,
-          window.data.CoordinateY.LOCATION_MIN_Y - MainPinSize.HALF_HEIGHT,
+      mainPin.style.top = moveWithBounds(mainPin.offsetTop - shift.y,
+          window.data.CoordinateY.LOCATION_MIN_Y,
           window.data.CoordinateY.LOCATION_MAX_Y);
 
-      mainPin.style.left = moveWithBounds(mainPin.offsetLeft, shift.x,
+      mainPin.style.left = moveWithBounds(mainPin.offsetLeft - shift.x,
           -MainPinSize.HALF_WIDTH,
           window.data.locationMaxX - MainPinSize.HALF_WIDTH);
 
@@ -58,14 +48,6 @@
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-
-      if (dragged) {
-        var onClickPreventDefault = function (clickEvt) {
-          clickEvt.preventDefault();
-          mainPin.removeEventListener('click', onClickPreventDefault);
-        };
-        mainPin.addEventListener('click', onClickPreventDefault);
-      }
     };
 
     document.addEventListener('mousemove', onMouseMove);
