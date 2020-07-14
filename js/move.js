@@ -1,11 +1,14 @@
 'use strict';
 
 (function () {
+  var PIN_POINTER_HEIGHT = 22;
   var MainPinSize = {
-    HALF_WIDTH: 32,
+    WIDTH: 64,
     HEIGHT: 86
   };
   var mainPin = window.data.map.querySelector('.map__pin--main');
+  var minY = window.data.CoordinateY.LOCATION_MIN_Y - MainPinSize.HEIGHT;
+  var maxY = window.data.CoordinateY.LOCATION_MAX_Y - PIN_POINTER_HEIGHT;
 
   var moveWithBounds = function (currentCoordinate, min, max) {
     return (Math.min(max, Math.max(min, currentCoordinate))) + 'px';
@@ -32,13 +35,16 @@
         y: moveEvt.clientY - window.data.map.offsetTop
       };
 
-      mainPin.style.top = moveWithBounds(mainPin.offsetTop - shift.y,
-          window.data.CoordinateY.LOCATION_MIN_Y,
-          window.data.CoordinateY.LOCATION_MAX_Y);
-
-      mainPin.style.left = moveWithBounds(mainPin.offsetLeft - shift.x,
-          -MainPinSize.HALF_WIDTH,
-          window.data.locationMaxX - MainPinSize.HALF_WIDTH);
+      if (startCoords.y >= minY && moveEvt.pageY <= maxY &&
+          startCoords.x >= window.data.LOCATION_MIN_X &&
+          startCoords.x <= window.data.locationMaxX) {
+        mainPin.style.top = moveWithBounds(mainPin.offsetTop - shift.y,
+            window.data.CoordinateY.LOCATION_MIN_Y - MainPinSize.HEIGHT,
+            window.data.CoordinateY.LOCATION_MAX_Y - MainPinSize.HEIGHT);
+        mainPin.style.left = moveWithBounds(mainPin.offsetLeft - shift.x,
+            window.data.LOCATION_MIN_X,
+            window.data.locationMaxX - MainPinSize.WIDTH);
+      }
 
       window.form.setAddress(false);
     };

@@ -79,6 +79,7 @@
   };
 
   window.data = {
+    LOCATION_MIN_X: LOCATION_MIN_X,
     FEATURES_TYPES: FEATURES_TYPES,
     CoordinateY: CoordinateY,
     locationMaxX: locationMaxX,
