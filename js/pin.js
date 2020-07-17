@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var PinSize = {
+    HALF_WIDTH: 25,
+    HEIGHT: 70
+  };
   var mainPin = window.data.map.querySelector('.map__pin--main');
   var pinTemplate = document.querySelector('#pin');
   var pinContent = pinTemplate.content.querySelector('.map__pin');
@@ -11,8 +15,8 @@
   var renderPin = function (adv) {
     var pin = pinContent.cloneNode(true);
 
-    pin.style.left = adv.location.x + pin.children[0].width / 2 + 'px';
-    pin.style.top = adv.location.y + pin.children[0].height + 'px';
+    pin.style.left = adv.location.x + PinSize.HALF_WIDTH + 'px';
+    pin.style.top = adv.location.y + PinSize.HEIGHT + 'px';
     pin.children[0].src = adv.author.avatar;
     pin.children[0].alt = adv.offer.title;
     pin.addEventListener('click', function () {
