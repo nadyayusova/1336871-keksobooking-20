@@ -8,8 +8,9 @@
   var mainPin = window.data.map.querySelector('.map__pin--main');
   var pinTemplate = document.querySelector('#pin');
   var pinContent = pinTemplate.content.querySelector('.map__pin');
-
-  var advertisements = [];
+  var pinsHere = window.data.map.querySelector('.map__pins');
+  var errorTemplate = document.querySelector('#error');
+  var errorContent = errorTemplate.content.querySelector('.error');
 
 
   var renderPin = function (adv) {
@@ -26,20 +27,43 @@
     return pin;
   };
 
-  var createPins = function () {
+  var createPins = function (adv) {
     var fragment = document.createDocumentFragment();
-    advertisements = window.data.createAdvertisements();
 
-    for (var i = 0; i < advertisements.length; i++) {
-      fragment.appendChild(renderPin(advertisements[i]));
+    for (var i = 0; i < adv.length; i++) {
+      fragment.appendChild(renderPin(adv[i]));
     }
 
     return fragment;
   };
 
+  var onLoad = function (data) {
+    pinsHere.appendChild(createPins(data));
+  };
+
+  var onError = function (errorText) {
+    var errorMessage = document.querySelector('.error');
+
+    if (!errorMessage) {
+      errorMessage = errorContent.cloneNode(true);
+      errorMessage.querySelector('.error__button').addEventListener('click', function () {
+        errorMessage.classList.add('hidden');
+        showPins();
+      });
+    }
+    errorMessage.querySelector('.error__message').textContent = errorText;
+    errorMessage.classList.remove('hidden');
+
+    window.data.map.appendChild(errorMessage);
+  };
+
+  var showPins = function () {
+    window.backend.load(onLoad, onError);
+  };
+
   window.pin = {
     mainPin: mainPin,
-    createPins: createPins
+    showPins: showPins
   };
 
 })();

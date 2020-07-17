@@ -1,9 +1,6 @@
 'use strict';
 
 (function () {
-  var pinsHere = window.data.map.querySelector('.map__pins');
-
-
   var activateMap = function () {
     window.data.map.classList.remove('map--faded');
   };
@@ -15,7 +12,7 @@
     window.form.activateForm();
     window.form.blockAddressField();
     window.form.setAddress(false);
-    pinsHere.appendChild(window.pin.createPins());
+    window.pin.showPins();
     window.form.selectCapacity.addEventListener('change', function () {
       window.form.checkCapacity();
     });
