@@ -5,9 +5,9 @@
   var StatusCode = {
     OK: 200
   };
-  var Urls = {
-    URL_TO: 'https://javascript.pages.academy/keksobooking',
-    URL_FROM: 'https://javascript.pages.academy/keksobooking/data'
+  var Url = {
+    TO: 'https://javascript.pages.academy/keksobooking',
+    FROM: 'https://javascript.pages.academy/keksobooking/data'
   };
 
   var prepareXhr = function (onLoad, onError) {
@@ -35,14 +35,14 @@
   var load = function (onLoad, onError) {
     var xhr = prepareXhr(onLoad, onError);
 
-    xhr.open('GET', Urls.URL_FROM);
+    xhr.open('GET', Url.FROM);
     xhr.send();
   };
 
   var save = function (data, onLoad, onError) {
     var xhr = prepareXhr(onLoad, onError);
 
-    xhr.open('POST', Urls.URL_TO);
+    xhr.open('POST', Url.TO);
     xhr.send(data);
   };
 
