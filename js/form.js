@@ -26,8 +26,8 @@
   var sendButton = adForm.querySelector('.ad-form__submit');
 
 
-  var activateForm = function () {
-    adForm.classList.remove('ad-form--disabled');
+  var activateForm = function (isTurnActive) {
+    return isTurnActive ? adForm.classList.remove('ad-form--disabled') : adForm.classList.add('ad-form--disabled');
   };
 
   var setFormElementsState = function (elementsList, isActive) {
@@ -69,6 +69,7 @@
   };
 
   window.form = {
+    adForm: adForm,
     adFormFieldsets: adFormFieldsets,
     mapFilters: mapFilters,
     sendButton: sendButton,
