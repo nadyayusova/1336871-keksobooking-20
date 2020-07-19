@@ -5,7 +5,11 @@
   var successContent = successTemplate.content.querySelector('.success');
 
   var activateMap = function (isTurnActive) {
-    return isTurnActive ? window.data.map.classList.remove('map--faded') : window.data.map.classList.add('map--faded');
+    if (isTurnActive) {
+      window.data.map.classList.remove('map--faded');
+    } else {
+      window.data.map.classList.add('map--faded');
+    }
   };
 
   var setAllActive = function () {
@@ -41,34 +45,33 @@
     window.form.sendButton.addEventListener('click', function () {
       window.form.checkCapacity();
     });
-    window.form.sendButton.addEventListener('click', function (evt) {
-      evt.preventDefault();
-      window.backend.save(new FormData(window.form.adForm), function () {
-        setAllInactive();
-        window.form.adForm.reset();
+    window.form.adForm.addEventListener('submit', onFormSubmit);
+  };
 
-        var successMessage = document.querySelector('.success');
+  var onFormSubmit = function (evt) {
+    evt.preventDefault();
+    window.backend.save(new FormData(window.form.adForm), function () {
+      setAllInactive();
+      window.form.adForm.reset();
 
-        if (!successMessage) {
-          successMessage = successContent.cloneNode(true);
+      var successMessage = document.querySelector('.success');
+      if (!successMessage) {
+        successMessage = successContent.cloneNode(true);
+        document.addEventListener('keydown', function (evtKey) {
+          if (evtKey.key === 'Escape' && !successMessage.classList.contains('hidden')) {
+            successMessage.classList.add('hidden');
+          }
+        });
+        document.addEventListener('click', function () {
+          if (!successMessage.classList.contains('hidden')) {
+            successMessage.classList.add('hidden');
+          }
+        });
+      }
+      successMessage.classList.remove('hidden');
+      window.pin.mainSection.appendChild(successMessage);
 
-          document.addEventListener('keydown', function (evtKey) {
-            if (evtKey.key === 'Escape' && !successMessage.classList.contains('hidden')) {
-              successMessage.classList.add('hidden');
-            }
-          });
-          document.addEventListener('click', function () {
-            if (!successMessage.classList.contains('hidden')) {
-              successMessage.classList.add('hidden');
-            }
-          });
-        }
-
-        successMessage.classList.remove('hidden');
-        window.pin.mainSection.appendChild(successMessage);
-
-      }, window.pin.onError);
-    });
+    }, window.pin.onError);
   };
 
   window.pin.mainPin.addEventListener('mousedown', function (evt) {

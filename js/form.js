@@ -27,7 +27,11 @@
 
 
   var activateForm = function (isTurnActive) {
-    return isTurnActive ? adForm.classList.remove('ad-form--disabled') : adForm.classList.add('ad-form--disabled');
+    if (isTurnActive) {
+      adForm.classList.remove('ad-form--disabled');
+    } else {
+      adForm.classList.add('ad-form--disabled');
+    }
   };
 
   var setFormElementsState = function (elementsList, isActive) {
