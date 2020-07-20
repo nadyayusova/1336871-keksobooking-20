@@ -87,7 +87,8 @@
 
   window.card = {
     cardsBeforeIt: cardsBeforeIt,
-    renderCard: renderCard
+    renderCard: renderCard,
+    closeCard: closeCard
   };
 
 })();
