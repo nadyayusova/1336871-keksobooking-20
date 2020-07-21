@@ -8,7 +8,9 @@
     LOCATION_MAX_Y: 630
   };
   var FEATURES_TYPES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+  var MAX_ADV_COUNT = 5;
 
+  var advertisements = [];
   var map = document.querySelector('.map');
 
   var getMapBounds = function () {
@@ -20,8 +22,10 @@
   window.data = {
     LOCATION_MIN_X: LOCATION_MIN_X,
     FEATURES_TYPES: FEATURES_TYPES,
+    MAX_ADV_COUNT: MAX_ADV_COUNT,
     CoordinateY: CoordinateY,
     locationMaxX: locationMaxX,
+    advertisements: advertisements,
     map: map
   };
 
