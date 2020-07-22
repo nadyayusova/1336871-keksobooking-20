@@ -30,8 +30,9 @@
 
   var createPins = function (adv) {
     var fragment = document.createDocumentFragment();
+    var pinsCount = Math.min(window.data.MAX_ADV_COUNT, adv.length);
 
-    for (var i = 0; i < adv.length; i++) {
+    for (var i = 0; i < pinsCount; i++) {
       fragment.appendChild(renderPin(adv[i]));
     }
 
@@ -39,7 +40,8 @@
   };
 
   var onLoad = function (data) {
-    pinsHere.appendChild(createPins(data));
+    window.data.advertisements = data;
+    updatePins();
   };
 
   var onError = function (errorText) {
@@ -80,12 +82,20 @@
     });
   };
 
+  var updatePins = function () {
+    hidePins();
+    var filteredHousingTypes =
+      window.filter.applyFilter(window.data.advertisements, 'type', window.filter.currentHousingType);
+    pinsHere.appendChild(createPins(filteredHousingTypes));
+  };
+
   window.pin = {
     mainPin: mainPin,
     mainSection: mainSection,
     onError: onError,
     showPins: showPins,
-    hidePins: hidePins
+    hidePins: hidePins,
+    updatePins: updatePins
   };
 
 })();
