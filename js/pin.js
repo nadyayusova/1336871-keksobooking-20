@@ -84,9 +84,8 @@
 
   var updatePins = function () {
     hidePins();
-    var filteredHousingTypes =
-      window.filter.applyFilter(window.data.advertisements, 'type', window.filter.currentHousingType);
-    pinsHere.appendChild(createPins(filteredHousingTypes));
+    var filteredAdv = window.filter.applyFilter(window.data.advertisements);
+    pinsHere.appendChild(createPins(filteredAdv));
   };
 
   window.pin = {
