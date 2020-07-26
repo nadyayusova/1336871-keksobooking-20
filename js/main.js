@@ -34,12 +34,7 @@
   var setOnce = function () {
     window.form.blockAddressField();
     window.filter.filters.addEventListener('change', function () {
-      window.card.closeCard();
-    });
-    window.filter.housingTypeFilter.addEventListener('change', function () {
-      window.filter.currentHousingType =
-        window.filter.housingTypeFilter.options[window.filter.housingTypeFilter.selectedIndex].value;
-      window.pin.updatePins();
+      window.debounce(window.pin.updatePins());
     });
     window.form.selectCapacity.addEventListener('change', function () {
       window.form.checkCapacity();

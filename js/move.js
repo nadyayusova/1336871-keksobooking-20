@@ -24,8 +24,8 @@
           window.data.CoordinateY.LOCATION_MAX_Y - MainPinSize.HEIGHT);
 
       mainPin.style.left = moveWithBounds(moveEvt.pageX - window.data.map.offsetLeft - MainPinSize.WIDTH / 2,
-          window.data.LOCATION_MIN_X,
-          window.data.locationMaxX - MainPinSize.WIDTH);
+          window.data.LOCATION_MIN_X - MainPinSize.WIDTH / 2,
+          window.data.locationMaxX - MainPinSize.WIDTH / 2);
 
       window.form.setAddress(false);
     };
