@@ -17,8 +17,8 @@
   var renderPin = function (adv) {
     var pin = pinContent.cloneNode(true);
 
-    pin.style.left = adv.location.x + PinSize.HALF_WIDTH + 'px';
-    pin.style.top = adv.location.y + PinSize.HEIGHT + 'px';
+    pin.style.left = adv.location.x - PinSize.HALF_WIDTH + 'px';
+    pin.style.top = adv.location.y - PinSize.HEIGHT + 'px';
     pin.children[0].src = adv.author.avatar;
     pin.children[0].alt = adv.offer.title;
     pin.addEventListener('click', function () {
@@ -83,6 +83,7 @@
   };
 
   var updatePins = function () {
+    window.card.closeCard();
     hidePins();
     var filteredAdv = window.filter.applyFilter(window.data.advertisements);
     pinsHere.appendChild(createPins(filteredAdv));

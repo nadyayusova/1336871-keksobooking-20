@@ -34,10 +34,7 @@
   var setOnce = function () {
     window.form.blockAddressField();
     window.filter.filters.addEventListener('change', function () {
-      window.debounce(function () {
-        window.card.closeCard();
-        window.pin.updatePins();
-      });
+      window.debounce(window.pin.updatePins());
     });
     window.form.selectCapacity.addEventListener('change', function () {
       window.form.checkCapacity();
