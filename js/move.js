@@ -27,7 +27,7 @@
           window.data.LOCATION_MIN_X - MainPinSize.WIDTH / 2,
           window.data.locationMaxX - MainPinSize.WIDTH / 2);
 
-      window.form.setAddress(false);
+      window.formmodule.setAddress(false);
     };
 
     var onMouseUp = function (upEvt) {

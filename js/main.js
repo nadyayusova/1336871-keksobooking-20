@@ -1,6 +1,14 @@
 'use strict';
 
 (function () {
+  var Initial = {
+    MAIN_PIN_STYLE: 'left: 570px; top: 375px;',
+    ADDRESS: '602, 407',
+    AVATAR: 'img/muffin-grey.svg'
+  };
+  var inputAddress = document.querySelector('input[name="address"]');
+  var avatarImg = document.querySelector('.ad-form-header__preview');
+  var filtersForm = document.querySelector('.map__filters');
   var successTemplate = document.querySelector('#success');
   var successContent = successTemplate.content.querySelector('.success');
 
@@ -14,89 +22,108 @@
 
   var setAllActive = function () {
     activateMap(true);
-    window.form.setFormElementsState(window.form.adFormFieldsets, true);
-    window.form.setFormElementsState(window.form.mapFilters, true);
-    window.form.activateForm(true);
-    window.form.setAddress(false);
-    window.pin.showPins();
+    window.formmodule.setFormElementsState(window.formmodule.adFormFieldsets, true);
+    window.formmodule.activateForm(true);
+    window.formmodule.setAddress(false);
+    window.pinmodule.showPins();
+  };
+
+  var resetPictures = function () {
+    avatarImg.children[0].src = Initial.AVATAR;
+    var photoPreviews = document.querySelectorAll('.ad-form__photo');
+    photoPreviews.forEach(function (photo, i) {
+      if (i > 0) {
+        photo.remove();
+      }
+    });
+    if (photoPreviews[0].children[0]) {
+      photoPreviews[0].children[0].remove();
+    }
   };
 
   var setAllInactive = function () {
-    window.card.closeCard();
-    window.pin.hidePins();
+    window.pinmodule.mainPin.style = Initial.MAIN_PIN_STYLE;
+    resetPictures();
+    filtersForm.reset();
+    window.cardmodule.closeCard();
+    window.pinmodule.hidePins();
     activateMap(false);
-    window.form.setFormElementsState(window.form.adFormFieldsets, false);
-    window.form.setFormElementsState(window.form.mapFilters, false);
-    window.form.activateForm(false);
-    window.form.setAddress(true);
+    window.formmodule.setFormElementsState(window.formmodule.adFormFieldsets, false);
+    window.formmodule.setFormElementsState(window.formmodule.mapFilters, false);
+    window.formmodule.mapFeatures.style.opacity = 0.3;
+    window.formmodule.activateForm(false);
+    window.formmodule.setAddress(true);
   };
 
   var setOnce = function () {
-    window.form.blockAddressField();
-    window.filter.filters.addEventListener('change', function () {
-      window.debounce(window.pin.updatePins());
+    window.formmodule.blockAddressField();
+    inputAddress.placeholder = Initial.ADDRESS;
+    window.filtermodule.filters.addEventListener('change', function () {
+      window.pinmodule.updatePins();
     });
-    window.form.selectCapacity.addEventListener('change', function () {
-      window.form.checkCapacity();
+    window.formmodule.selectCapacity.addEventListener('change', function () {
+      window.formmodule.checkCapacity();
     });
-    window.form.selectRooms.addEventListener('change', function () {
-      window.form.checkCapacity();
+    window.formmodule.selectRooms.addEventListener('change', function () {
+      window.formmodule.checkCapacity();
     });
-    window.form.selectType.addEventListener('change', function () {
-      window.form.setPrice();
+    window.formmodule.selectType.addEventListener('change', function () {
+      window.formmodule.setPrice();
     });
-    window.form.sendButton.addEventListener('click', function () {
-      window.form.checkCapacity();
+    window.formmodule.sendButton.addEventListener('click', function () {
+      window.formmodule.checkCapacity();
     });
-    window.form.adForm.addEventListener('submit', onFormSubmit);
+    window.formmodule.selectTimeIn.addEventListener('change', function (evt) {
+      window.formmodule.setTimes(evt.target);
+    });
+    window.formmodule.selectTimeOut.addEventListener('change', function (evt) {
+      window.formmodule.setTimes(evt.target);
+    });
+    window.formmodule.adForm.addEventListener('submit', onFormSubmit);
+    window.formmodule.adForm.addEventListener('reset', onFormReset);
   };
 
   var onFormSubmit = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(window.form.adForm), function () {
+    window.backend.save(new FormData(window.formmodule.adForm), function () {
       setAllInactive();
-      window.form.adForm.reset();
+      window.formmodule.adForm.reset();
 
       var successMessage = document.querySelector('.success');
       if (!successMessage) {
         successMessage = successContent.cloneNode(true);
-        document.addEventListener('keydown', function (evtKey) {
-          if (evtKey.key === 'Escape' && !successMessage.classList.contains('hidden')) {
-            successMessage.classList.add('hidden');
-          }
-        });
-        document.addEventListener('click', function () {
-          if (!successMessage.classList.contains('hidden')) {
-            successMessage.classList.add('hidden');
-          }
-        });
       }
-      successMessage.classList.remove('hidden');
-      window.pin.mainSection.appendChild(successMessage);
+      window.message.showMessage(successMessage);
+      window.pinmodule.mainSection.appendChild(successMessage);
 
-    }, window.pin.onError);
+    }, window.pinmodule.onError);
   };
 
-  window.pin.mainPin.addEventListener('mousedown', function (evt) {
+  var onFormReset = function () {
+    setAllInactive();
+  };
+
+  window.pinmodule.mainPin.addEventListener('mousedown', function (evt) {
     if (evt.button === 0 && window.data.map.classList.contains('map--faded')) {
       setAllActive();
     }
   });
 
-  window.pin.mainPin.addEventListener('mousedown', function (evt) {
+  window.pinmodule.mainPin.addEventListener('mousedown', function (evt) {
     window.move.mainPinMousedown(evt);
   });
 
-  window.pin.mainPin.addEventListener('keydown', function (evt) {
+  window.pinmodule.mainPin.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter' && window.data.map.classList.contains('map--faded')) {
       setAllActive();
     }
   });
 
   var init = function () {
-    window.form.setAddress(true);
-    window.form.setFormElementsState(window.form.adFormFieldsets, false);
-    window.form.setFormElementsState(window.form.mapFilters, false);
+    window.formmodule.setAddress(true);
+    window.formmodule.setFormElementsState(window.formmodule.adFormFieldsets, false);
+    window.formmodule.setFormElementsState(window.formmodule.mapFilters, false);
+    window.formmodule.mapFeatures.style.opacity = 0.3;
     setOnce();
   };
 

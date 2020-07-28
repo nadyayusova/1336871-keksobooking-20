@@ -15,14 +15,23 @@
     'house': 5000,
     'palace': 10000
   };
+  var TitleLength = {
+    MIN_LENGTH: 30,
+    MAX_LENGTH: 100
+  };
+
   var adForm = document.querySelector('.ad-form');
   var adFormFieldsets = adForm.querySelectorAll('fieldset');
-  var mapFilters = document.querySelectorAll('.map__filters select, .map__filters fieldset');
+  var mapFilters = document.querySelectorAll('.map__filters select, .map__filters fieldset, .map__features input');
+  var mapFeatures = document.querySelector('.map__features');
+  var inputTitle = adForm.querySelector('input[name="title"]');
   var inputAddress = adForm.querySelector('input[name="address"]');
   var selectRooms = adForm.querySelector('select[name="rooms"]');
   var selectCapacity = adForm.querySelector('select[name="capacity"]');
   var selectType = adForm.querySelector('select[name="type"]');
   var inputPrice = adForm.querySelector('input[name="price"]');
+  var selectTimeIn = adForm.querySelector('select[name="timein"]');
+  var selectTimeOut = adForm.querySelector('select[name="timeout"]');
   var sendButton = adForm.querySelector('.ad-form__submit');
 
 
@@ -45,9 +54,9 @@
   };
 
   var setAddress = function (isInitialAddress) {
-    inputAddress.value = (parseInt(window.pin.mainPin.style.left, 10) + MainPinSize.HALF_WIDTH) + ', ' +
+    inputAddress.value = (parseInt(window.pinmodule.mainPin.style.left, 10) + MainPinSize.HALF_WIDTH) + ', ' +
     (
-      parseInt(window.pin.mainPin.style.top, 10) +
+      parseInt(window.pinmodule.mainPin.style.top, 10) +
       ((isInitialAddress) ? (MainPinSize.HALF_WIDTH) : MainPinSize.HEIGHT)
     );
   };
@@ -59,10 +68,13 @@
 
     if (currentCapacity < minCapacity) {
       selectCapacity.setCustomValidity('Гостей слишком мало. Для выбранного количесва комнат минимально - ' + minCapacity);
+      selectCapacity.style.border = '2px solid red';
     } else if (currentCapacity > maxCapacity) {
       selectCapacity.setCustomValidity('Гостей слишком много. Для выбранного количесва комнат максимально - ' + maxCapacity);
+      selectCapacity.style.border = '2px solid red';
     } else {
       selectCapacity.setCustomValidity('');
+      selectCapacity.removeAttribute('style');
     }
   };
 
@@ -72,20 +84,63 @@
     inputPrice.placeholder = minPrice;
   };
 
-  window.form = {
+  inputTitle.addEventListener('input', function () {
+    var titleLength = inputTitle.value.length;
+
+    if (titleLength < TitleLength.MIN_LENGTH || titleLength > TitleLength.MAX_LENGTH) {
+      inputTitle.style.border = '2px solid red';
+    } else {
+      inputTitle.removeAttribute('style');
+    }
+  });
+
+  inputTitle.addEventListener('invalid', function () {
+    inputTitle.style.border = '2px solid red';
+  });
+
+  inputPrice.addEventListener('input', function () {
+    var priceValue = inputPrice.value;
+    var minPrice = inputPrice.getAttribute('min');
+    var maxPrice = inputPrice.getAttribute('max');
+
+    if (priceValue === '' || Number(priceValue) < minPrice || Number(priceValue) > maxPrice) {
+      inputPrice.style.border = '2px solid red';
+    } else {
+      inputPrice.removeAttribute('style');
+    }
+  });
+
+  inputPrice.addEventListener('invalid', function () {
+    inputPrice.style.border = '2px solid red';
+  });
+
+  var setTimes = function (changedSelect) {
+    if (changedSelect.name === 'timein') {
+      selectTimeOut.value = selectTimeIn.value;
+    } else {
+      selectTimeIn.value = selectTimeOut.value;
+    }
+  };
+
+
+  window.formmodule = {
     adForm: adForm,
     adFormFieldsets: adFormFieldsets,
     mapFilters: mapFilters,
+    mapFeatures: mapFeatures,
     sendButton: sendButton,
     selectRooms: selectRooms,
     selectCapacity: selectCapacity,
     selectType: selectType,
+    selectTimeIn: selectTimeIn,
+    selectTimeOut: selectTimeOut,
     activateForm: activateForm,
     setFormElementsState: setFormElementsState,
     setAddress: setAddress,
     blockAddressField: blockAddressField,
     checkCapacity: checkCapacity,
-    setPrice: setPrice
+    setPrice: setPrice,
+    setTimes: setTimes
   };
 
 })();
