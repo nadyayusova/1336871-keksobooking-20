@@ -83,7 +83,7 @@
     return filteredAdvertisements;
   };
 
-  window.filtermodule = {
+  window.filterModule = {
     filters: filters,
     applyFilter: applyFilter
   };

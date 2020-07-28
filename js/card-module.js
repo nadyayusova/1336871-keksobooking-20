@@ -81,11 +81,15 @@
     if (!currentCard) {
       return;
     }
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
     currentCard.remove();
     document.removeEventListener('keydown', onCardEscPress);
   };
 
-  window.cardmodule = {
+  window.cardModule = {
     cardsBeforeIt: cardsBeforeIt,
     renderCard: renderCard,
     closeCard: closeCard

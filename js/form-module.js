@@ -36,11 +36,7 @@
 
 
   var activateForm = function (isTurnActive) {
-    if (isTurnActive) {
-      adForm.classList.remove('ad-form--disabled');
-    } else {
-      adForm.classList.add('ad-form--disabled');
-    }
+    adForm.classList.toggle('ad-form--disabled', !isTurnActive);
   };
 
   var setFormElementsState = function (elementsList, isActive) {
@@ -54,9 +50,9 @@
   };
 
   var setAddress = function (isInitialAddress) {
-    inputAddress.value = (parseInt(window.pinmodule.mainPin.style.left, 10) + MainPinSize.HALF_WIDTH) + ', ' +
+    inputAddress.value = (parseInt(window.pinModule.mainPin.style.left, 10) + MainPinSize.HALF_WIDTH) + ', ' +
     (
-      parseInt(window.pinmodule.mainPin.style.top, 10) +
+      parseInt(window.pinModule.mainPin.style.top, 10) +
       ((isInitialAddress) ? (MainPinSize.HALF_WIDTH) : MainPinSize.HEIGHT)
     );
   };
@@ -123,7 +119,7 @@
   };
 
 
-  window.formmodule = {
+  window.formModule = {
     adForm: adForm,
     adFormFieldsets: adFormFieldsets,
     mapFilters: mapFilters,

@@ -13,19 +13,15 @@
   var successContent = successTemplate.content.querySelector('.success');
 
   var activateMap = function (isTurnActive) {
-    if (isTurnActive) {
-      window.data.map.classList.remove('map--faded');
-    } else {
-      window.data.map.classList.add('map--faded');
-    }
+    window.data.map.classList.toggle('map--faded', !isTurnActive);
   };
 
   var setAllActive = function () {
     activateMap(true);
-    window.formmodule.setFormElementsState(window.formmodule.adFormFieldsets, true);
-    window.formmodule.activateForm(true);
-    window.formmodule.setAddress(false);
-    window.pinmodule.showPins();
+    window.formModule.setFormElementsState(window.formModule.adFormFieldsets, true);
+    window.formModule.activateForm(true);
+    window.formModule.setAddress(false);
+    window.pinModule.showPins();
   };
 
   var resetPictures = function () {
@@ -42,88 +38,88 @@
   };
 
   var setAllInactive = function () {
-    window.pinmodule.mainPin.style = Initial.MAIN_PIN_STYLE;
+    window.pinModule.mainPin.style = Initial.MAIN_PIN_STYLE;
     resetPictures();
     filtersForm.reset();
-    window.cardmodule.closeCard();
-    window.pinmodule.hidePins();
+    window.cardModule.closeCard();
+    window.pinModule.hidePins();
     activateMap(false);
-    window.formmodule.setFormElementsState(window.formmodule.adFormFieldsets, false);
-    window.formmodule.setFormElementsState(window.formmodule.mapFilters, false);
-    window.formmodule.mapFeatures.style.opacity = 0.3;
-    window.formmodule.activateForm(false);
-    window.formmodule.setAddress(true);
+    window.formModule.setFormElementsState(window.formModule.adFormFieldsets, false);
+    window.formModule.setFormElementsState(window.formModule.mapFilters, false);
+    window.formModule.mapFeatures.style.opacity = 0.3;
+    window.formModule.activateForm(false);
+    window.formModule.setAddress(true);
   };
 
   var setOnce = function () {
-    window.formmodule.blockAddressField();
+    window.formModule.blockAddressField();
     inputAddress.placeholder = Initial.ADDRESS;
-    window.filtermodule.filters.addEventListener('change', function () {
-      window.pinmodule.updatePins();
+    window.filterModule.filters.addEventListener('change', function () {
+      window.pinModule.updatePins();
     });
-    window.formmodule.selectCapacity.addEventListener('change', function () {
-      window.formmodule.checkCapacity();
+    window.formModule.selectCapacity.addEventListener('change', function () {
+      window.formModule.checkCapacity();
     });
-    window.formmodule.selectRooms.addEventListener('change', function () {
-      window.formmodule.checkCapacity();
+    window.formModule.selectRooms.addEventListener('change', function () {
+      window.formModule.checkCapacity();
     });
-    window.formmodule.selectType.addEventListener('change', function () {
-      window.formmodule.setPrice();
+    window.formModule.selectType.addEventListener('change', function () {
+      window.formModule.setPrice();
     });
-    window.formmodule.sendButton.addEventListener('click', function () {
-      window.formmodule.checkCapacity();
+    window.formModule.sendButton.addEventListener('click', function () {
+      window.formModule.checkCapacity();
     });
-    window.formmodule.selectTimeIn.addEventListener('change', function (evt) {
-      window.formmodule.setTimes(evt.target);
+    window.formModule.selectTimeIn.addEventListener('change', function (evt) {
+      window.formModule.setTimes(evt.target);
     });
-    window.formmodule.selectTimeOut.addEventListener('change', function (evt) {
-      window.formmodule.setTimes(evt.target);
+    window.formModule.selectTimeOut.addEventListener('change', function (evt) {
+      window.formModule.setTimes(evt.target);
     });
-    window.formmodule.adForm.addEventListener('submit', onFormSubmit);
-    window.formmodule.adForm.addEventListener('reset', onFormReset);
+    window.formModule.adForm.addEventListener('submit', onFormSubmit);
+    window.formModule.adForm.addEventListener('reset', onFormReset);
   };
 
   var onFormSubmit = function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(window.formmodule.adForm), function () {
+    window.backend.save(new FormData(window.formModule.adForm), function () {
       setAllInactive();
-      window.formmodule.adForm.reset();
+      window.formModule.adForm.reset();
 
       var successMessage = document.querySelector('.success');
       if (!successMessage) {
         successMessage = successContent.cloneNode(true);
       }
       window.message.showMessage(successMessage);
-      window.pinmodule.mainSection.appendChild(successMessage);
+      window.pinModule.mainSection.appendChild(successMessage);
 
-    }, window.pinmodule.onError);
+    }, window.pinModule.onError);
   };
 
   var onFormReset = function () {
     setAllInactive();
   };
 
-  window.pinmodule.mainPin.addEventListener('mousedown', function (evt) {
+  window.pinModule.mainPin.addEventListener('mousedown', function (evt) {
     if (evt.button === 0 && window.data.map.classList.contains('map--faded')) {
       setAllActive();
     }
   });
 
-  window.pinmodule.mainPin.addEventListener('mousedown', function (evt) {
+  window.pinModule.mainPin.addEventListener('mousedown', function (evt) {
     window.move.mainPinMousedown(evt);
   });
 
-  window.pinmodule.mainPin.addEventListener('keydown', function (evt) {
+  window.pinModule.mainPin.addEventListener('keydown', function (evt) {
     if (evt.key === 'Enter' && window.data.map.classList.contains('map--faded')) {
       setAllActive();
     }
   });
 
   var init = function () {
-    window.formmodule.setAddress(true);
-    window.formmodule.setFormElementsState(window.formmodule.adFormFieldsets, false);
-    window.formmodule.setFormElementsState(window.formmodule.mapFilters, false);
-    window.formmodule.mapFeatures.style.opacity = 0.3;
+    window.formModule.setAddress(true);
+    window.formModule.setFormElementsState(window.formModule.adFormFieldsets, false);
+    window.formModule.setFormElementsState(window.formModule.mapFilters, false);
+    window.formModule.mapFeatures.style.opacity = 0.3;
     setOnce();
   };
 

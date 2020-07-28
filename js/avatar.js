@@ -2,11 +2,11 @@
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+  var PREVIEW_ALT = 'Фото жилья';
   var PreviewSize = {
     PREVIEW_WIDTH: 70,
     PREVIEW_HEIGHT: 70
   };
-  var PREVIEW_ALT = 'Фото жилья';
 
   var avararFileChooser = document.querySelector('.ad-form-header__input');
   var avatarPreview = document.querySelector('.ad-form-header__preview img');

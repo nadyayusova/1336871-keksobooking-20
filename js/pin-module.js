@@ -23,12 +23,8 @@
     pin.children[0].alt = advertisements.offer.title;
 
     var onPinClick = function () {
-      var lastPin = document.querySelector('.map__pin--active');
-      if (lastPin) {
-        lastPin.classList.remove('map__pin--active');
-      }
+      window.cardModule.renderCard(advertisements);
       pin.classList.add('map__pin--active');
-      window.cardmodule.renderCard(advertisements);
     };
 
     pin.addEventListener('click', onPinClick);
@@ -50,8 +46,8 @@
   var onLoad = function (data) {
     window.data.advertisements = data;
     updatePins();
-    window.formmodule.setFormElementsState(window.formmodule.mapFilters, true);
-    window.formmodule.mapFeatures.style.opacity = 1;
+    window.formModule.setFormElementsState(window.formModule.mapFilters, true);
+    window.formModule.mapFeatures.style.opacity = 1;
   };
 
   var onError = function (errorText) {
@@ -86,13 +82,13 @@
   };
 
   var updatePins = function () {
-    window.cardmodule.closeCard();
+    window.cardModule.closeCard();
     hidePins();
-    var filteredAdvertisements = window.filtermodule.applyFilter(window.data.advertisements);
+    var filteredAdvertisements = window.filterModule.applyFilter(window.data.advertisements);
     pinsHere.appendChild(createPins(filteredAdvertisements));
   };
 
-  window.pinmodule = {
+  window.pinModule = {
     mainPin: mainPin,
     mainSection: mainSection,
     onError: onError,
