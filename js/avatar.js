@@ -20,43 +20,40 @@
     });
   };
 
-  avararFileChooser.addEventListener('change', function (evt) {
+  var loadFile = function (evt, eventHandler) {
     var file = evt.target.files[0];
     var fileName = file.name.toLowerCase();
 
     if (isOneOfTypes(fileName)) {
       var reader = new FileReader();
-
-      reader.addEventListener('load', function () {
-        avatarPreview.src = reader.result;
-      });
-
+      reader.addEventListener('load', eventHandler.bind(null, reader));
       reader.readAsDataURL(file);
     }
+  };
+
+  avararFileChooser.addEventListener('change', function (evt) {
+    var onAvatarLoad = function (fileReader) {
+      avatarPreview.src = fileReader.result;
+    };
+
+    loadFile(evt, onAvatarLoad);
   });
 
   photoFileChooser.addEventListener('change', function (evt) {
-    var file = evt.target.files[0];
-    var fileName = file.name.toLowerCase();
+    var onHousingPreviewLoad = function (fileReader) {
+      var img = document.createElement('img');
+      img.src = fileReader.result;
+      img.width = PreviewSize.PREVIEW_WIDTH;
+      img.height = PreviewSize.PREVIEW_HEIGHT;
+      img.alt = PREVIEW_ALT;
+      if (photoPreviewContainer.children.length === 0) {
+        photoPreviewContainer.appendChild(img);
+      } else {
+        allPhotos.appendChild(photoPreviewContainer.cloneNode(false)).appendChild(img);
+      }
+    };
 
-    if (isOneOfTypes(fileName)) {
-      var reader = new FileReader();
-
-      reader.addEventListener('load', function () {
-        var img = document.createElement('img');
-        img.src = reader.result;
-        img.width = PreviewSize.PREVIEW_WIDTH;
-        img.height = PreviewSize.PREVIEW_HEIGHT;
-        img.alt = PREVIEW_ALT;
-        if (photoPreviewContainer.children.length === 0) {
-          photoPreviewContainer.appendChild(img);
-        } else {
-          allPhotos.appendChild(photoPreviewContainer.cloneNode(false)).appendChild(img);
-        }
-      });
-
-      reader.readAsDataURL(file);
-    }
+    loadFile(evt, onHousingPreviewLoad);
   });
 
 })();
